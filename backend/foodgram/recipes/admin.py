@@ -7,17 +7,26 @@ from .models import (Favourite, Ingredient, Recipe, RecipeIngredient,
 class RecipeIngredientAdmin(admin.TabularInline):
     model = RecipeIngredient
     autocomplete_fields = ('ingredient', )
+    list_display = (
+        'name', 'measurement_unit', 'amount'
+    )
+    search_fields = ('name', )
 
 
 class RecipeAdmin(admin.ModelAdmin):
     inlines = [RecipeIngredientAdmin, ]
     list_display = (
-        'id', 'name', 'author', 'text'
+        'id', 'name', 'author', 'text', 'count_favourites'
     )
     list_filter = ('author', 'name', 'tags')
+    readonly_fields = ('count_favourites', )
     filter_vertical = ('tags', )
     search_fields = ('name', )
     empty_value_display = 'пусто'
+
+    @staticmethod
+    def count_favourites(obj):
+        return obj.favourite_recipe.count()
 
 
 class IngredientAdmin(admin.ModelAdmin):

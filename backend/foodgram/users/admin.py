@@ -6,7 +6,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     list_display = (
         'username', 'first_name', 'last_name', 'email'
     )
-    search_fields = ('username', )
+    search_fields = ('username', 'email', )
     list_filter = ('username', )
     empy_value_display = '-пусто-'
 

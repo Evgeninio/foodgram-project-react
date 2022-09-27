@@ -130,3 +130,9 @@ dmypy.json
 
 # .idea
 .idea
+
+# isort configuration
+.isort.cfg
+
+# media
+backend/foodgram/media
