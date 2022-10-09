@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 from users.models import CustomUser
+from django.conf import settings
 
 BREAKFAST = '#FBCEB1'
 LUNCH = '#FAE7B5'
@@ -40,7 +41,6 @@ class Tag(models.Model):
 
 
 class Ingredient(models.Model):
-    id = models.AutoField(primary_key=True)
     name = models.TextField(
         'Название ингредиента',
         max_length=256
@@ -56,18 +56,18 @@ class Ingredient(models.Model):
 
 
 class Recipe(models.Model):
-    id = models.AutoField(primary_key=True)
+
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='recipes',
+        verbose_name='Автор рецепта'
+    )
     tags = models.ManyToManyField(
         Tag,
         db_index=True,
         related_name='recipes',
         verbose_name='Тэг'
-    )
-    author = models.ForeignKey(
-        CustomUser,
-        verbose_name='user',
-        related_name='recipes',
-        on_delete=models.CASCADE,
     )
     name = models.TextField(
         max_length=256
@@ -79,7 +79,8 @@ class Recipe(models.Model):
         )
     ingredients = models.ManyToManyField(
         Ingredient,
-        through='RecipeIngredient'
+        through='RecipeIngredient',
+        related_name='recipes'
     )
     cooking_time = models.PositiveSmallIntegerField(
         validators=[
@@ -99,7 +100,6 @@ class Recipe(models.Model):
 
 
 class RecipeIngredient(models.Model):
-    id = models.AutoField(primary_key=True)
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
@@ -110,7 +110,7 @@ class RecipeIngredient(models.Model):
         Ingredient,
         on_delete=models.CASCADE,
         verbose_name='Ингредиент',
-        related_name='ingredient'
+        related_name='recipe_ingredients'
     )
     amount = models.PositiveIntegerField(verbose_name='Колличетсво')
 
@@ -123,53 +123,52 @@ class RecipeIngredient(models.Model):
         )
 
 
-class Favourite(models.Model):
-    id = models.AutoField(primary_key=True)
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        verbose_name='Рецепт',
-        related_name='favourite_recipe'
-    )
-    user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        verbose_name='Пользователь',
-        related_name='favourite_user'
-    )
+# class Favourite(models.Model):
+#     recipe = models.ForeignKey(
+#         Recipe,
+#         on_delete=models.CASCADE,
+#         verbose_name='Рецепт',
+#         related_name='favourite_recipe'
+#     )
+#     user = models.ForeignKey(
+#         CustomUser,
+#         on_delete=models.CASCADE,
+#         verbose_name='Пользователь',
+#         related_name='favourite_user'
+#     )
+#
+#     class Meta:
+#         verbose_name = 'Избранный'
+#         verbose_name_plural = 'Избранные'
+#         constraints = (
+#             models.UniqueConstraint(
+#                 fields=['user', 'recipe'],
+#                 name='unique_favorite'
+#             ),
+#         )
+#
+#
+# class ShoppingCart(models.Model):
+#     recipe = models.ForeignKey(
+#         Recipe,
+#         on_delete=models.CASCADE,
+#         verbose_name='Рецепт',
+#         related_name='shoppingcart_recipe'
+#     )
+#     user = models.ForeignKey(
+#         CustomUser,
+#         on_delete=models.CASCADE,
+#         verbose_name='Пользователь',
+#         related_name='User_shopping_cart'
+#     )
+#
+#     class Meta:
+#         verbose_name = 'Список покупок'
+#         verbose_name_plural = 'Списки покупок'
+#         constraints = (
+#             models.UniqueConstraint(
+#                 fields=['user', 'recipe'],
+#                 name='unique_shopping_cart'
+#             ),
+#         )
 
-    class Meta:
-        verbose_name = 'Избранный'
-        verbose_name_plural = 'Избранные'
-        constraints = (
-            models.UniqueConstraint(
-                fields=['user', 'recipe'],
-                name='unique_favorite'
-            ),
-        )
-
-
-class ShoppingCart(models.Model):
-    id = models.AutoField(primary_key=True)
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        verbose_name='Рецепт',
-        related_name='shoppingcart_recipe'
-    )
-    user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        verbose_name='Пользователь',
-        related_name='User_shopping_cart'
-    )
-
-    class Meta:
-        verbose_name = 'Список покупок'
-        verbose_name_plural = 'Списки покупок'
-        constraints = (
-            models.UniqueConstraint(
-                fields=['user', 'recipe'],
-                name='unique_shopping_cart'
-            ),
-        )
