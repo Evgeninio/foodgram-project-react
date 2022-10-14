@@ -27,7 +27,6 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Ingredient
         fields = ('id', 'name', 'measurement_unit')
@@ -37,8 +36,7 @@ class RecipeIngredientGetSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='ingredient.id')
     name = serializers.ReadOnlyField(source='ingredient.name')
     measurement_unit = serializers.ReadOnlyField(
-        source='ingredient.measurement_unit',
-        read_only=True
+        source='ingredient.measurement_unit'
     )
 
     class Meta:
@@ -47,8 +45,8 @@ class RecipeIngredientGetSerializer(serializers.ModelSerializer):
 
 
 class RecipeIngredientPostSerializer(serializers.ModelSerializer):
-    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
-    amount = serializers.IntegerField()
+    id = serializers.IntegerField(write_only=True)
+    amount = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = RecipeIngredient
@@ -192,26 +190,34 @@ class RecipeGetSerializer(serializers.ModelSerializer):
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
-    """Используется на запись и редактирование рецепта."""
 
     author = CustomUserSerializer(read_only=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
         many=True
     )
-    ingredients = RecipeIngredientPostSerializer(many=True)
+    ingredients = RecipeIngredientPostSerializer(
+        many=True
+
+    )
     image = Base64ImageField(required=True)
 
+    class Meta:
+        model = Recipe
+        fields = (
+            'author', 'name', 'cooking_time',
+            'tags', 'text', 'ingredients',
+            'image'
+        )
+
     @staticmethod
-    def create_ingredients(ingredients, recipe):
-        RecipeIngredient.objects.bulk_create([
-            RecipeIngredient(
+    def create_ingredients(recipe, ingredients):
+        for ingredient in ingredients:
+            RecipeIngredient.objects.create(
                 recipe=recipe,
-                amount=ingredient['amount'],
-                #ingredient=Ingredient.objects.get(id=ingredient['id']),
-                ingredient=ingredient['id'],
-            ) for ingredient in ingredients
-        ])
+                ingredient=Ingredient.objects.get(id=ingredient['id']),
+                amount=ingredient.get('amount')
+            )
 
     @staticmethod
     def create_tags(tags, recipe):
@@ -225,22 +231,15 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             author=self.context.get('request').user,
             **validated_data
         )
-        self.create_ingredients(ingredients, recipe)
         self.create_tags(tags, recipe)
+        self.create_ingredients(recipe, ingredients)
         return recipe
 
-    # def update(self, recipe, validated_data):
-    #     recipe.tags.clear()
-    #     RecipeIngredient.objects.filter(recipe=recipe).delete()
-    #     ingredients = validated_data.pop('ingredients')
-    #     tags = validated_data.pop('tags')
-    #     self.create_ingredients_tags(recipe, ingredients, tags)
-    #     return super().update(recipe, validated_data)
-
-    class Meta:
-        model = Recipe
-        fields = (
-            'author', 'name', 'cooking_time',
-            'tags', 'text', 'ingredients',
-            'image'
-        )
+    def update(self, recipe, validated_data):
+        recipe.tags.clear()
+        RecipeIngredient.objects.filter(recipe=recipe).delete()
+        ingredients = validated_data.pop('ingredients')
+        tags = validated_data.pop('tags')
+        self.create_tags(tags, recipe)
+        self.create_ingredients(recipe, ingredients)
+        return super().update(recipe, validated_data)

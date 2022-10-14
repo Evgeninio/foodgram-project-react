@@ -171,4 +171,3 @@ class RecipeIngredient(models.Model):
 #                 name='unique_shopping_cart'
 #             ),
 #         )
-
