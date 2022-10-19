@@ -1,20 +1,24 @@
-from django.shortcuts import get_object_or_404, get_list_or_404
+from django.db.models import Sum
+from django.http import HttpResponse
+from django.shortcuts import get_list_or_404, get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from recipes.models import Ingredient, Recipe, Tag, Favorite, ShoppingCart, RecipeIngredient
+from djoser.views import UserViewSet
+from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                            ShoppingCart, Tag)
 from rest_framework import filters, mixins, permissions, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from users.models import CustomUser, Follow
-from django.db.models import Sum
-from .permissions import AuthorOrReadOnly, IsAdminOrReadOnly
-from .serializers import (IngredientSerializer,
-                          RecipeGetSerializer, TagSerializer,
-                          CustomUserSerializer, RecipeCreateSerializer, FavoriteSerializer, ShortRecipeSerializer, FollowSerializer, FollowListSerializer, ShoppingCartSerializer)
-from djoser.views import UserViewSet
-from rest_framework.decorators import action
+
 from .filters import RecipeFilter
-from django.http import HttpResponse
+from .permissions import AuthorOrReadOnly, IsAdminOrReadOnly
+from .serializers import (CustomUserSerializer, FavoriteSerializer,
+                          FollowListSerializer, FollowSerializer,
+                          IngredientSerializer, RecipeCreateSerializer,
+                          RecipeGetSerializer, ShoppingCartSerializer,
+                          ShortRecipeSerializer, TagSerializer)
 
 
 class ListCreateDeleteViewSet(

@@ -1,7 +1,7 @@
+from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 from users.models import CustomUser
-from django.conf import settings
 
 BREAKFAST = '#FBCEB1'
 LUNCH = '#FAE7B5'
