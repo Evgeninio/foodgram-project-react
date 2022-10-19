@@ -54,9 +54,11 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            cd ~/foodgram/
+            sudo docker pull Evgeninio/foodgram-project-frontend:lastest
+            sudo docker pull Evgeninio/foodgram-project-backend:lastest
             sudo docker-compose stop
-            sudo docker-compose rm -f backend
+            sudo docker-compose rm foodgram-project-backend
+            sudo docker-compose rm foodgram-project-frontend
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} > .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
@@ -69,4 +71,3 @@ jobs:
             sudo docker-compose exec -T backend python manage.py collectstatic --noinput
             sudo docker-compose exec -T backend python manage.py import_tags
             sudo docker-compose exec -T backend python manage.py import_ingredients
-            sudo docker-compose exec -T backend python manage.py data_test
