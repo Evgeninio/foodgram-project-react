@@ -54,11 +54,10 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo docker pull Evgeninio/foodgram-project-frontend:lastest
-            sudo docker pull Evgeninio/foodgram-project-backend:lastest
+            sudo docker pull Evgeninio/foodgram_frontend
+            sudo docker pull Evgeninio/foodgram-project
             sudo docker-compose stop
-            sudo docker-compose rm foodgram-project-backend
-            sudo docker-compose rm foodgram-project-frontend
+            sudo docker-compose rm backend
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} > .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
@@ -67,7 +66,7 @@ jobs:
             echo DB_HOST=${{ secrets.DB_HOST }} >> .env
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             sudo docker-compose up -d
-            sudo docker-compose exec -T backend python manage.py migrate
-            sudo docker-compose exec -T backend python manage.py collectstatic --noinput
-            sudo docker-compose exec -T backend python manage.py import_tags
-            sudo docker-compose exec -T backend python manage.py import_ingredients
+            sudo docker-compose backend python manage.py migrate
+            sudo docker-compose backend python manage.py collectstatic --noinput
+            sudo docker-compose backend python manage.py import_ingredients
+            sudo docker-compose backend python manage.py import_ingredients
