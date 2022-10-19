@@ -5,7 +5,6 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from recipes.models import (CHOICES, Favorite, Ingredient, Recipe,
                             RecipeIngredient, ShoppingCart, Tag)
 from rest_framework import serializers
-
 from users.models import CustomUser, Follow
 
 

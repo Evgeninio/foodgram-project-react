@@ -9,16 +9,14 @@ from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-
 from users.models import CustomUser, Follow
 
 from .filters import RecipeFilter
 from .permissions import IsAdminOrReadOnly
 from .serializers import (CustomUserSerializer, FavoriteSerializer,
-                          FollowSerializer,
-                          IngredientSerializer, RecipeCreateSerializer,
-                          RecipeGetSerializer, ShoppingCartSerializer,
-                          TagSerializer)
+                          FollowSerializer, IngredientSerializer,
+                          RecipeCreateSerializer, RecipeGetSerializer,
+                          ShoppingCartSerializer, TagSerializer)
 
 
 class ListCreateDeleteViewSet(
