@@ -67,6 +67,6 @@ jobs:
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             sudo docker-compose up -d
             sudo docker-compose backend python manage.py migrate
-            sudo docker-compose backend python manage.py collectstatic --noinput
+            sudo docker-compose backend python manage.py collectstatic 
             sudo docker-compose backend python manage.py import_ingredients
             sudo docker-compose backend python manage.py import_ingredients
