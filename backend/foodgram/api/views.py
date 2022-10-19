@@ -9,16 +9,16 @@ from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from rest_framework.views import APIView
+
 from users.models import CustomUser, Follow
 
 from .filters import RecipeFilter
-from .permissions import AuthorOrReadOnly, IsAdminOrReadOnly
+from .permissions import IsAdminOrReadOnly
 from .serializers import (CustomUserSerializer, FavoriteSerializer,
-                          FollowListSerializer, FollowSerializer,
+                          FollowSerializer,
                           IngredientSerializer, RecipeCreateSerializer,
                           RecipeGetSerializer, ShoppingCartSerializer,
-                          ShortRecipeSerializer, TagSerializer)
+                          TagSerializer)
 
 
 class ListCreateDeleteViewSet(
@@ -130,34 +130,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
             'attachment;filename=shopping_cart.pdf'
         )
         return response
-
-    # @action(detail=True, methods=['post', 'delete', 'get'],
-    #         permission_classes=[permissions.IsAuthenticated])
-    # def favorite(self, request, pk=None):
-    #     if request.method == 'POST' or request.method == 'GET':
-    #         return self.add_obj(Favorite, request.user, pk)
-    #     elif request.method == 'DELETE':
-    #         return self.delete_obj(Favorite, request.user, pk)
-    #     return None
-    #
-    # def add_obj(self, model, user, pk):
-    #     if model.objects.filter(user=user, recipe__id=pk).exists():
-    #         return Response({
-    #             'errors': 'Рецепт уже добавлен в список'
-    #         }, status=status.HTTP_400_BAD_REQUEST)
-    #     recipe = get_object_or_404(Recipe, id=pk)
-    #     model.objects.create(user=user, recipe=recipe)
-    #     serializer = FavoriteListSerializer(recipe)
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #
-    # def delete_obj(self, model, user, pk):
-    #     obj = model.objects.filter(user=user, recipe__id=pk)
-    #     if obj.exists():
-    #         obj.delete()
-    #         return Response(status=status.HTTP_204_NO_CONTENT)
-    #     return Response({
-    #         'errors': 'Рецепт уже удален'
-    #     }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CustomUserViewSet(UserViewSet):

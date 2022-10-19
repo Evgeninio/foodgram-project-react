@@ -5,7 +5,7 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from recipes.models import (CHOICES, Favorite, Ingredient, Recipe,
                             RecipeIngredient, ShoppingCart, Tag)
 from rest_framework import serializers
-from rest_framework.generics import get_object_or_404
+
 from users.models import CustomUser, Follow
 
 
@@ -140,13 +140,26 @@ class RecipeGetSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
     author = CustomUserSerializer(read_only=True)
     image = Base64ImageField(required=False, allow_null=True)
-    is_favorited = serializers.SerializerMethodField(method_name='get_is_favorited', read_only=True)
+    is_favorited = serializers.SerializerMethodField\
+        (
+            method_name='get_is_favorited',
+            read_only=True
+        )
     is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
-        fields = ('id', 'tags', 'author', 'image', 'ingredients',
-                  'name', 'text', 'is_favorited', 'cooking_time', 'is_in_shopping_cart')
-        #'is_favourited', 'is_in_shopping_cart',
+        fields = (
+            'id',
+            'tags',
+            'author',
+            'image',
+            'ingredients',
+            'name',
+            'text',
+            'is_favorited',
+            'cooking_time',
+            'is_in_shopping_cart'
+        )
         model = Recipe
 
     def get_ingredients(self, recipe):
@@ -170,32 +183,32 @@ class RecipeGetSerializer(serializers.ModelSerializer):
         return ShoppingCart.objects.filter(
             user=request.user, recipe=obj).exists()
 
-    # def validate(self, data):
-    #     ingredients = data.get('ingredients')
-    #     for ingredient in ingredients:
-    #         if not Ingredient.objects.filter(
-    #                 id=ingredient['id']).exists():
-    #             raise serializers.ValidationError({
-    #                 'ingredients': f'Ингредиента с id - {ingredient["id"]} нет'
-    #             })
-    #     if len(ingredients) != len(set([item['id'] for item in ingredients])):
-    #         raise serializers.ValidationError(
-    #             'Ингредиенты не должны повторяться!')
-    #     tags = data.get('tags')
-    #     if len(tags) != len(set([item for item in tags])):
-    #         raise serializers.ValidationError({
-    #             'tags': 'Тэги не должны повторяться!'})
-    #     amounts = data.get('ingredients')
-    #     if [item for item in amounts if item['amount'] < 1]:
-    #         raise serializers.ValidationError({
-    #             'amount': 'Минимальное количество ингредиента 1'
-    #         })
-    #     cooking_time = data.get('cooking_time')
-    #     if cooking_time < 1:
-    #         raise serializers.ValidationError({
-    #             'cooking_time': 'Минимальное время приготовления 1 минута'
-    #         })
-    #     return data
+    def validate(self, data):
+        ingredients = data.get('ingredients')
+        for ingredient in ingredients:
+            if not Ingredient.objects.filter(
+                    id=ingredient['id']).exists():
+                raise serializers.ValidationError({
+                    'ingredients': f'Ингредиента с id - {ingredient["id"]} нет'
+                })
+        if len(ingredients) != len(set([item['id'] for item in ingredients])):
+            raise serializers.ValidationError(
+                'Ингредиенты не должны повторяться!')
+        tags = data.get('tags')
+        if len(tags) != len(set([item for item in tags])):
+            raise serializers.ValidationError({
+                'tags': 'Тэги не должны повторяться!'})
+        amounts = data.get('ingredients')
+        if [item for item in amounts if item['amount'] < 1]:
+            raise serializers.ValidationError({
+                'amount': 'Минимальное количество ингредиента 1'
+            })
+        cooking_time = data.get('cooking_time')
+        if cooking_time < 1:
+            raise serializers.ValidationError({
+                'cooking_time': 'Минимальное время приготовления 1 минута'
+            })
+        return data
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
@@ -320,7 +333,8 @@ class FollowSerializer(serializers.ModelSerializer):
             queryset = Recipe.objects.filter(
                  author__id=obj.id).order_by('id')[:recipes_limit]
         else:
-            queryset = Recipe.objects.filter(following__id=obj.id).order_by('id')
+            queryset = Recipe.objects.filter(
+                following__id=obj.id).order_by('id')
         return ShortRecipeSerializer(queryset, many=True).data
 
     def get_is_subscribed(self, obj):
