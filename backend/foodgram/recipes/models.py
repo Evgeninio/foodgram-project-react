@@ -8,9 +8,9 @@ LUNCH = '#FAE7B5'
 DINNER = '#9ACEEB'
 
 CHOICES = (
-        (BREAKFAST, 'Абрикосовый'),
-        (LUNCH, 'Бананамания'),
-        (DINNER, 'СинийВасилек')
+    (BREAKFAST, 'Абрикосовый'),
+    (LUNCH, 'Бананамания'),
+    (DINNER, 'СинийВасилек')
 )
 
 
@@ -76,7 +76,7 @@ class Recipe(models.Model):
         upload_to='recipes/images/',
         null=True,
         default=None
-        )
+    )
     ingredients = models.ManyToManyField(
         Ingredient,
         through='RecipeIngredient',

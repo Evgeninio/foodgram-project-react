@@ -81,17 +81,6 @@ class FavoriteSerializer(serializers.ModelSerializer):
             context={'request': self.context.get('request')}
         ).data
 
-#
-# class ShoppingCartSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ShoppingCart
-#         fields = ('user', 'recipe')
-#
-#     def to_representation(self, instance):
-#         request = self.context.get('request')
-#         context = {'request': request}
-#         return RecipeSerializer(instance.recipe, context=context).data
-
 
 class CustomUserCreateSerializer(UserCreateSerializer):
 
@@ -139,8 +128,7 @@ class RecipeGetSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
     author = CustomUserSerializer(read_only=True)
     image = Base64ImageField(required=False, allow_null=True)
-    is_favorited = serializers.SerializerMethodField\
-        (
+    is_favorited = serializers.SerializerMethodField(
             method_name='get_is_favorited',
             read_only=True
         )
