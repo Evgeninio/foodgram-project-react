@@ -129,9 +129,8 @@ class RecipeGetSerializer(serializers.ModelSerializer):
     author = CustomUserSerializer(read_only=True)
     image = Base64ImageField(required=False, allow_null=True)
     is_favorited = serializers.SerializerMethodField(
-            method_name='get_is_favorited',
-            read_only=True
-        )
+        method_name='get_is_favorited',
+        read_only=True)
     is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
@@ -318,7 +317,7 @@ class FollowSerializer(serializers.ModelSerializer):
         if request.GET.get('recipes_limit'):
             recipes_limit = int(request.GET.get('recipes_limit'))
             queryset = Recipe.objects.filter(
-                 author__id=obj.id).order_by('id')[:recipes_limit]
+                author__id=obj.id).order_by('id')[:recipes_limit]
         else:
             queryset = Recipe.objects.filter(
                 following__id=obj.id).order_by('id')
