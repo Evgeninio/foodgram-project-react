@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import (Ingredient, Recipe, RecipeIngredient, Tag)
+from .models import (Ingredient, Recipe, RecipeIngredient, Tag, Favorite, ShoppingCart)
+from users.models import CustomUser
 
 
 class RecipeIngredientAdmin(admin.TabularInline):
@@ -17,16 +18,10 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'name', 'author', 'text'
     )
-    #'count_favourites'
     list_filter = ('author', 'name', 'tags')
-    #readonly_fields = ('count_favourites', )
     filter_vertical = ('tags', )
     search_fields = ('name', )
     empty_value_display = 'пусто'
-
-    # @staticmethod
-    # def count_favourites(obj):
-    #     return obj.favourite_recipe.count()
 
 
 class IngredientAdmin(admin.ModelAdmin):
@@ -47,24 +42,25 @@ class TagAdmin(admin.ModelAdmin):
     empy_value_display = '-пусто-'
 
 
-# class FavouriteAdmin(admin.ModelAdmin):
-#     list_display = (
-#         'id', 'user', 'recipe'
-#     )
-#     search_fields = ('favourited_recipe', )
-#     list_filter = ('id', 'user', 'recipe')
-#     empy_value_display = '-пусто-'
-#
-#
-# class ShoppingCartAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'user', 'recipe')
-#     search_fields = ('user', 'recipe')
-#     list_filter = ('user', 'recipe')
-#     empy_value_display = '-пусто-'
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'user', 'recipe'
+    )
+    search_fields = ('favorited_recipe', )
+    list_filter = ('id', 'user', 'recipe')
+    empy_value_display = '-пусто-'
+
+
+class ShoppingCartAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'recipe')
+    search_fields = ('user', 'recipe')
+    list_filter = ('user', 'recipe')
+    empy_value_display = '-пусто-'
 
 
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Tag, TagAdmin)
-# admin.site.register(Favourite, FavouriteAdmin)
-# admin.site.register(ShoppingCart, ShoppingCartAdmin)
+admin.site.register(Favorite, FavoriteAdmin)
+admin.site.register(ShoppingCart, ShoppingCartAdmin)
+

@@ -4,7 +4,7 @@ import os
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 
-from recipes.models import Ingredient
+from recipes.models import Tag
 
 DATA_ROOT = os.path.join(settings.BASE_DIR, 'data')
 
@@ -12,7 +12,7 @@ DATA_ROOT = os.path.join(settings.BASE_DIR, 'data')
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
-        parser.add_argument('filename', default='ingredients.csv', nargs='?',
+        parser.add_argument('filename', default='tags.csv', nargs='?',
                             type=str)
 
     def handle(self, *args, **options):
@@ -21,10 +21,11 @@ class Command(BaseCommand):
                       encoding='utf-8') as file:
                 data = csv.reader(file)
                 for row in data:
-                    name, measurement_unit = row
-                    Ingredient.objects.get_or_create(
+                    name, color, slug = row
+                    Tag.objects.get_or_create(
                         name=name,
-                        measurement_unit=measurement_unit
+                        color=color,
+                        slug=slug
                     )
         except FileNotFoundError:
             raise CommandError(
