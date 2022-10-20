@@ -57,7 +57,7 @@ jobs:
             sudo docker pull Evgeninio/foodgram_frontend
             sudo docker pull Evgeninio/foodgram-project
             sudo docker-compose stop
-            sudo docker-compose rm api
+            sudo docker-compose rm backend
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} > .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
