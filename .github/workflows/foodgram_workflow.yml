@@ -68,3 +68,7 @@ jobs:
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             echo DJ_SECRET_KEY=${{ secrets.DJ_SECRET_KEY }} >> .env
             sudo docker-compose up -d
+            sudo docker-compose exec -T python manage.py migrate
+            sudo docker-compose exec -T python manage.py collectstatic --noinput
+            sudo docker-compose exec -T python manage.py import_ingredients
+            sudo docker-compose exec -T python manage.py import_ingredients
