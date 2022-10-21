@@ -71,4 +71,3 @@ jobs:
             sudo docker-compose exec -T python manage.py migrate
             sudo docker-compose exec -T python manage.py collectstatic --noinput
             sudo docker-compose exec -T python manage.py import_ingredients
-            sudo docker-compose exec -T python manage.py import_ingredients
