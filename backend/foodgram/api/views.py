@@ -11,7 +11,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from users.models import CustomUser, Follow
 
-from .filters import RecipeFilter
+from .filters import RecipeFilter, IngredientFilter
 from .permissions import IsAdminOrReadOnly
 from .serializers import (CustomUserSerializer, FavoriteSerializer,
                           FollowSerializer, IngredientSerializer,
@@ -34,6 +34,8 @@ class ListCreateDeleteViewSet(
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all().order_by('name')
     serializer_class = IngredientSerializer
+    filter_backends = [IngredientFilter, ]
+    search_fields = ['^name']
     permission_classes = [permissions.AllowAny]
     pagination_class = None
 
