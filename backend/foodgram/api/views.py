@@ -11,7 +11,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from users.models import CustomUser, Follow
 
-from .filters import RecipeFilter, IngredientFilter
+from .filters import IngredientFilter, RecipeFilter
 from .permissions import IsAdminOrReadOnly
 from .serializers import (CustomUserSerializer, FavoriteSerializer,
                           FollowSerializer, IngredientSerializer,
