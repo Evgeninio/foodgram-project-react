@@ -5,16 +5,13 @@ from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
 
 
 class RecipeIngredientAdmin(admin.TabularInline):
-    model = RecipeIngredient
-    autocomplete_fields = ('ingredient', )
-    list_display = (
-        'name', 'measurement_unit', 'amount'
-    )
-    search_fields = ('name', )
+    model = Recipe.ingredients.through
+    extra = 1
+    min_num = 1
 
 
 class RecipeAdmin(admin.ModelAdmin):
-    inlines = [RecipeIngredientAdmin, ]
+    inlines = [RecipeIngredientAdmin]
     list_display = (
         'id', 'name', 'author', 'text'
     )

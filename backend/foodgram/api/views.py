@@ -56,8 +56,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return RecipeGetSerializer
-        else:
-            return RecipeCreateSerializer
+        return RecipeCreateSerializer
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

@@ -1,5 +1,6 @@
 import base64
 
+from django.shortcuts import get_object_or_404
 from django.core.files.base import ContentFile
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
@@ -124,7 +125,7 @@ class CustomUserSerializer(UserSerializer):
 
 class RecipeGetSerializer(serializers.ModelSerializer):
     ingredients = serializers.SerializerMethodField(
-        method_name='get_ingredients'
+        method_name='get_ingredients',  read_only=True
     )
     tags = TagSerializer(many=True)
     author = CustomUserSerializer(read_only=True)
@@ -207,10 +208,9 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
     )
     ingredients = RecipeIngredientPostSerializer(
         many=True
-
     )
-    image = Base64ImageField(required=True)
-
+    image = Base64ImageField()
+    # required = True
     class Meta:
         model = Recipe
         fields = (
@@ -218,6 +218,46 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
             'tags', 'text', 'ingredients',
             'image'
         )
+
+    def validate(self, data):
+        ingredients = self.initial_data['ingredients']
+        ingredients_list = []
+        if not ingredients:
+            raise serializers.ValidationError({
+                'ingredients': 'Добавьте ингредиенты'})
+        for ingredient in ingredients:
+            current_ingredient = get_object_or_404(
+                Ingredient, id=ingredient['id']
+            )
+            if current_ingredient in ingredients_list:
+                raise serializers.ValidationError({
+                    'ingredients': 'Ингредиенты должны быть уникальными'
+                })
+            if int(ingredient['amount']) < 0:
+                raise serializers.ValidationError({
+                    'amount': 'Количество ингредиента '
+                              'не может быть меньше нуля!'
+                })
+            ingredients_list.append(current_ingredient)
+        tags = data['tags']
+        if not tags:
+            raise serializers.ValidationError({
+                'tags': 'Нужно выбрать хотя бы один тег!'
+            })
+        tags_list = []
+        for tag in tags:
+            if tag in tags_list:
+                raise serializers.ValidationError({
+                    'tags': 'Теги должны быть уникальными!'
+                })
+            tags_list.append(tag)
+        cooking_time = self.initial_data['cooking_time']
+        if int(cooking_time) <= 0:
+            raise serializers.ValidationError({
+                'cooking_time': 'Время приготовления должно быть больше 0!'
+            })
+        data['ingredients'] = ingredients
+        return data
 
     @staticmethod
     def create_ingredients(recipe, ingredients):
