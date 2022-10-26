@@ -125,7 +125,7 @@ class CustomUserSerializer(UserSerializer):
 
 class RecipeGetSerializer(serializers.ModelSerializer):
     ingredients = serializers.SerializerMethodField(
-        method_name='get_ingredients',  read_only=True
+        method_name='get_ingredients', read_only=True
     )
     tags = TagSerializer(many=True)
     author = CustomUserSerializer(read_only=True)
@@ -209,8 +209,8 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientPostSerializer(
         many=True
     )
-    image = Base64ImageField()
-    # required = True
+    image = Base64ImageField(required=True)
+
     class Meta:
         model = Recipe
         fields = (
