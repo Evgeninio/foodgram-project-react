@@ -130,8 +130,8 @@ class RecipeIngredient(models.Model):
             fields=['recipe', 'ingredient'],
             name='unique_recipe_ingredients'),
             models.CheckConstraint(
-                check=models.Q(amount=1),
-                name='amount_1')
+                check=models.Q(amount__gte=1),
+                name='amount_gte_1')
         ]
         verbose_name = 'Ингредиент в рецептах'
         verbose_name_plural = 'Ингредиенты в рецептах'
