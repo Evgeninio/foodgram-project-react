@@ -46,9 +46,9 @@ const HomePage = ({ updateOrders }) => {
   return <Main>
     <Container>
       <MetaTags>
-        <title>Рецепты</title>
+        <title>Недвижимость</title>
         <meta name="description" content="Продуктовый помощник - Рецепты" />
-        <meta property="og:title" content="Недвижимость" />
+        <meta property="og:title" content="Рецепты" />
       </MetaTags>
       <div className={styles.title}>
         <Title title='Недвижимость' />
