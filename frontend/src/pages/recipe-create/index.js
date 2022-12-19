@@ -67,7 +67,7 @@ const RecipeCreate = ({ onEdit }) => {
         <meta name="description" content="Продуктовый помощник - Создание рецепта" />
         <meta property="og:title" content="Создание рецепта" />
       </MetaTags>
-      <Title title='Создание рецепта' />
+      <Title title='Создание объявления' />
       <Form
         className={styles.form}
         onSubmit={e => {
@@ -110,7 +110,7 @@ const RecipeCreate = ({ onEdit }) => {
         }}
       >
         <Input
-          label='Название рецепта'
+          label='Стоимость'
           onChange={e => {
             const value = e.target.value
             setRecipeName(value)
@@ -125,86 +125,9 @@ const RecipeCreate = ({ onEdit }) => {
           checkboxClassName={styles.checkboxGroupItem}
           handleChange={handleChange}
         />
-        <div className={styles.ingredients}>
-          <div className={styles.ingredientsInputs}>
-            <Input
-              label='Ингредиенты'
-              className={styles.ingredientsNameInput}
-              inputClassName={styles.ingredientsInput}
-              labelClassName={styles.ingredientsLabel}
-              onChange={e => {
-                const value = e.target.value
-                setIngredientValue({
-                  ...ingredientValue,
-                  name: value
-                })
-              }}
-              onFocus={_ => {
-                setShowIngredients(true)
-              }}
-              value={ingredientValue.name}
-            />
-            <div className={styles.ingredientsAmountInputContainer}>
-              <Input
-                className={styles.ingredientsAmountInput}
-                inputClassName={styles.ingredientsAmountValue}
-                onChange={e => {
-                  const value = e.target.value
-                  setIngredientValue({
-                    ...ingredientValue,
-                    amount: value
-                  })
-                }}
-                value={ingredientValue.amount}
-              />
-              {ingredientValue.measurement_unit !== '' && <div className={styles.measurementUnit}>{ingredientValue.measurement_unit}</div>}
-            </div>
-            {showIngredients && ingredients.length > 0 && <IngredientsSearch
-              ingredients={ingredients}
-              onClick={({ id, name, measurement_unit }) => {
-                handleIngredientAutofill({ id, name, measurement_unit })
-                setIngredients([])
-                setShowIngredients(false)
-              }}
-            />}
-
-          </div>
-          <div className={styles.ingredientsAdded}>
-            {recipeIngredients.map(item => {
-              return <div
-                className={styles.ingredientsAddedItem}
-              >
-                <span className={styles.ingredientsAddedItemTitle}>{item.name}</span> <span>-</span> <span>{item.amount}{item.measurement_unit}</span> <span
-                  className={styles.ingredientsAddedItemRemove}
-                  onClick={_ => {
-                    const recipeIngredientsUpdated = recipeIngredients.filter(ingredient => {
-                      return ingredient.id !== item.id
-                    })
-                    setRecipeIngredients(recipeIngredientsUpdated)
-                  }}
-                >Удалить</span>
-              </div>
-            })}
-          </div>
-          <div
-            className={styles.ingredientAdd}
-            onClick={_ => {
-              if (ingredientValue.amount === '' || ingredientValue.name === '' || !ingredientValue.id) { return }
-              setRecipeIngredients([...recipeIngredients, ingredientValue])
-              setIngredientValue({
-                name: '',
-                id: null,
-                amount: '',
-                measurement_unit: ''
-              })
-            }}
-          >
-            Добавить ингредиент
-          </div>
-        </div>
         <div className={styles.cookingTime}>
           <Input
-            label='Время приготовления'
+            label='Время до ближайшего метро'
             className={styles.ingredientsTimeInput}
             labelClassName={styles.cookingTimeLabel}
             inputClassName={styles.ingredientsTimeValue}
@@ -217,7 +140,7 @@ const RecipeCreate = ({ onEdit }) => {
           <div className={styles.cookingTimeUnit}>мин.</div>
         </div>
         <Textarea
-          label='Описание рецепта'
+          label='Описание недвижимости'
           onChange={e => {
             const value = e.target.value
             setRecipeText(value)
@@ -235,7 +158,7 @@ const RecipeCreate = ({ onEdit }) => {
           disabled={checkIfDisabled()}
           className={styles.button}
         >
-          Создать рецепт
+          Создать объявление
         </Button>
       </Form>
     </Container>
