@@ -5,9 +5,11 @@ from django.core.files.base import ContentFile
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 
-from recipes.models import (CHOICES, Favorite, Ingredient, Recipe,
-                            RecipeIngredient, ShoppingCart, Tag)
+from recipes.models import (CHOICES, Favorite, Recipe, Ingredient, RecipeIngredient,
+                             ShoppingCart, Tag)
 from users.models import CustomUser, Follow
+
+# Ingredient, RecipeIngredient, в импорт моделей
 
 
 class Base64ImageField(serializers.ImageField):
@@ -31,19 +33,21 @@ class TagSerializer(serializers.ModelSerializer):
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
-        fields = ('id', 'name', 'measurement_unit')
+        fields = ('id', 'name')
+        # 'measurement_unit')
 
 
 class RecipeIngredientGetSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='ingredient.id')
     name = serializers.ReadOnlyField(source='ingredient.name')
-    measurement_unit = serializers.ReadOnlyField(
-        source='ingredient.measurement_unit'
-    )
+    # measurement_unit = serializers.ReadOnlyField(
+    #     source='ingredient.measurement_unit'
+    # )
 
     class Meta:
         model = RecipeIngredient
-        fields = ('id', 'name', 'amount', 'measurement_unit')
+        fields = ('id', 'name', 'amount')
+                  # 'measurement_unit')
 
 
 class RecipeIngredientPostSerializer(serializers.ModelSerializer):
@@ -141,13 +145,14 @@ class RecipeGetSerializer(serializers.ModelSerializer):
             'tags',
             'author',
             'image',
-            'ingredients',
             'name',
             'text',
             'is_favorited',
+            'ingredients',
             'cooking_time',
             'is_in_shopping_cart'
         )
+        # 'ingredients',
         model = Recipe
 
     def get_ingredients(self, recipe):
@@ -171,32 +176,32 @@ class RecipeGetSerializer(serializers.ModelSerializer):
         return ShoppingCart.objects.filter(
             user=request.user, recipe=obj).exists()
 
-    def validate(self, data):
-        ingredients = data.get('ingredients')
-        for ingredient in ingredients:
-            if not Ingredient.objects.filter(
-                    id=ingredient['id']).exists():
-                raise serializers.ValidationError({
-                    'ingredients': f'Ингредиента с id - {ingredient["id"]} нет'
-                })
-        if len(ingredients) != len(set([item['id'] for item in ingredients])):
-            raise serializers.ValidationError(
-                'Ингредиенты не должны повторяться!')
-        tags = data.get('tags')
-        if len(tags) != len(set([item for item in tags])):
-            raise serializers.ValidationError({
-                'tags': 'Тэги не должны повторяться!'})
-        amounts = data.get('ingredients')
-        if [item for item in amounts if item['amount'] < 1]:
-            raise serializers.ValidationError({
-                'amount': 'Минимальное количество ингредиента 1'
-            })
-        cooking_time = data.get('cooking_time')
-        if cooking_time < 1:
-            raise serializers.ValidationError({
-                'cooking_time': 'Минимальное время приготовления 1 минута'
-            })
-        return data
+    # def validate(self, data):
+    #     ingredients = data.get('ingredients')
+    #     for ingredient in ingredients:
+    #         if not Ingredient.objects.filter(
+    #                 id=ingredient['id']).exists():
+    #             raise serializers.ValidationError({
+    #                 'ingredients': f'Ингредиента с id - {ingredient["id"]} нет'
+    #             })
+    #     if len(ingredients) != len(set([item['id'] for item in ingredients])):
+    #         raise serializers.ValidationError(
+    #             'Ингредиенты не должны повторяться!')
+    #     tags = data.get('tags')
+    #     if len(tags) != len(set([item for item in tags])):
+    #         raise serializers.ValidationError({
+    #             'tags': 'Тэги не должны повторяться!'})
+    #     amounts = data.get('ingredients')
+    #     if [item for item in amounts if item['amount'] < 1]:
+    #         raise serializers.ValidationError({
+    #             'amount': 'Минимальное количество ингредиента 1'
+    #         })
+    #     cooking_time = data.get('cooking_time')
+    #     if cooking_time < 1:
+    #         raise serializers.ValidationError({
+    #             'cooking_time': 'Минимальное время приготовления 1 минута'
+    #         })
+    #     return data
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
@@ -215,49 +220,50 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         model = Recipe
         fields = (
             'author', 'name', 'cooking_time',
-            'tags', 'text', 'ingredients',
-            'image'
+            'tags', 'text',
+            'image',
+            'ingredients'
         )
+        # 'ingredients',
 
-    def validate(self, data):
-        ingredients = self.initial_data['ingredients']
-        ingredients_list = []
-        if not ingredients:
-            raise serializers.ValidationError({
-                'ingredients': 'Добавьте ингредиенты'})
-        for ingredient in ingredients:
-            current_ingredient = get_object_or_404(
-                Ingredient, id=ingredient['id']
-            )
-            if current_ingredient in ingredients_list:
-                raise serializers.ValidationError({
-                    'ingredients': 'Ингредиенты должны быть уникальными'
-                })
-            if int(ingredient['amount']) < 0:
-                raise serializers.ValidationError({
-                    'amount': 'Количество ингредиента '
-                              'не может быть меньше нуля!'
-                })
-            ingredients_list.append(current_ingredient)
-        tags = data['tags']
-        if not tags:
-            raise serializers.ValidationError({
-                'tags': 'Нужно выбрать хотя бы один тег!'
-            })
-        tags_list = []
-        for tag in tags:
-            if tag in tags_list:
-                raise serializers.ValidationError({
-                    'tags': 'Теги должны быть уникальными!'
-                })
-            tags_list.append(tag)
-        cooking_time = self.initial_data['cooking_time']
-        if int(cooking_time) <= 0:
-            raise serializers.ValidationError({
-                'cooking_time': 'Время приготовления должно быть больше 0!'
-            })
-        data['ingredients'] = ingredients
-        return data
+    # def validate(self, data):
+    #     ingredients = self.initial_data['ingredients']
+    #     ingredients_list = []
+    #     if not ingredients:
+    #         raise serializers.ValidationError({
+    #             'ingredients': 'Добавьте ингредиенты'})
+    #     for ingredient in ingredients:
+    #         current_ingredient = get_object_or_404(
+    #             Ingredient, id=ingredient['id']
+    #         )
+    #         if current_ingredient in ingredients_list:
+    #             raise serializers.ValidationError({
+    #                 'ingredients': 'Ингредиенты должны быть уникальными'
+    #             })
+    #         if int(ingredient['amount']) < 0:
+    #             raise serializers.ValidationError({
+    #                 'amount': 'Количество ингредиента '
+    #                           'не может быть меньше нуля!'
+    #             })
+    #         ingredients_list.append(current_ingredient)
+    #     tags = data['tags']
+    #     if not tags:
+    #         raise serializers.ValidationError({
+    #             'tags': 'Нужно выбрать хотя бы один тег!'
+    #         })
+    #     tags_list = []
+    #     for tag in tags:
+    #         if tag in tags_list:
+    #             raise serializers.ValidationError({
+    #                 'tags': 'Теги должны быть уникальными!'
+    #             })
+    #         tags_list.append(tag)
+    #     cooking_time = self.initial_data['cooking_time']
+    #     if int(cooking_time) <= 0:
+    #         raise serializers.ValidationError({
+    #             'cooking_time': 'Время приготовления должно быть больше 0!'
+    #         })
+    #     return data
 
     @staticmethod
     def create_ingredients(recipe, ingredients):

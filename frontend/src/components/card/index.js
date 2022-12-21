@@ -31,7 +31,7 @@ const Card = ({
         />
         <TagsContainer tags={tags} />
         <div className={styles.card__time}>
-          <Icons.ClockIcon /> {cooking_time} мин.
+          <Icons.ClockIcon /> {cooking_time} м^2
         </div>
         <div className={styles.card__author}>
           <Icons.UserIcon /> <LinkComponent
@@ -43,20 +43,20 @@ const Card = ({
       </div>
       
       <div className={styles.card__footer}>
-          {authContext && <Button
-            className={styles.card__add}
-            modifier={is_in_shopping_cart ? 'style_light' : 'style_light-blue'}
-            clickHandler={_ => {
-              handleAddToCart({
-                id,
-                toAdd: Number(!is_in_shopping_cart),
-                callback: updateOrders
-              })
-            }}
-            disabled={!authContext}
-          >
-            {is_in_shopping_cart ? <><Icons.DoneIcon />Рецепт добавлен</> : <><Icons.PlusIcon fill='#4A61DD' /> Добавить в покупки</>}
-          </Button>}
+          {/*{authContext && <Button*/}
+          {/*  className={styles.card__add}*/}
+          {/*  modifier={is_in_shopping_cart ? 'style_light' : 'style_light-blue'}*/}
+          {/*  clickHandler={_ => {*/}
+          {/*    handleAddToCart({*/}
+          {/*      id,*/}
+          {/*      toAdd: Number(!is_in_shopping_cart),*/}
+          {/*      callback: updateOrders*/}
+          {/*    })*/}
+          {/*  }}*/}
+          {/*  disabled={!authContext}*/}
+          {/*>*/}
+          {/*  {is_in_shopping_cart ? <><Icons.DoneIcon />Рецепт добавлен</> : <><Icons.PlusIcon fill='#4A61DD' /> Добавить в покупки</>}*/}
+          {/*</Button>}*/}
           
           {authContext && <Button
             modifier='style_none'

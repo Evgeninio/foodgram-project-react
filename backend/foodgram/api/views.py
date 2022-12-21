@@ -8,15 +8,16 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+from recipes.models import (Favorite, Recipe, Ingredient,RecipeIngredient,
                             ShoppingCart, Tag)
 from users.models import CustomUser, Follow
 from .filters import IngredientFilter, RecipeFilter
 from .permissions import IsAdminOrReadOnly
 from .serializers import (CustomUserSerializer, FavoriteSerializer,
-                          FollowSerializer, IngredientSerializer,
-                          RecipeCreateSerializer, RecipeGetSerializer,
-                          ShoppingCartSerializer, TagSerializer)
+                          FollowSerializer, RecipeCreateSerializer, RecipeGetSerializer,
+                          ShoppingCartSerializer, TagSerializer,IngredientSerializer)
+# Ingredient,RecipeIngredient,
+# IngredientSerializer,
 
 
 class ListCreateDeleteViewSet(
@@ -105,30 +106,30 @@ class RecipeViewSet(viewsets.ModelViewSet):
             pk
         )
 
-    @action(
-        detail=False,
-        methods=['GET'],
-        permission_classes=(permissions.IsAuthenticated,)
-    )
-    def download_shopping_cart(self, request, pk=None):
-        ingredients = RecipeIngredient.objects.filter(
-            recipe__shopping_cart__user=request.user.id
-        ).values(
-            'ingredient__name',
-            'ingredient__measurement_unit'
-        ).annotate(amount=Sum('amount'))
-        shopping_cart = ['Список покупок:\n--------------']
-        for position, ingredient in enumerate(ingredients, start=1):
-            shopping_cart.append(
-                f'\n{position}. {ingredient["ingredient__name"]}:'
-                f' {ingredient["amount"]}'
-                f'({ingredient["ingredient__measurement_unit"]})'
-            )
-        response = HttpResponse(shopping_cart, content_type='text')
-        response['Content-Disposition'] = (
-            'attachment;filename=shopping_cart.pdf'
-        )
-        return response
+    # @action(
+    #     detail=False,
+    #     methods=['GET'],
+    #     permission_classes=(permissions.IsAuthenticated,)
+    # )
+    # def download_shopping_cart(self, request, pk=None):
+    #     ingredients = RecipeIngredient.objects.filter(
+    #         recipe__shopping_cart__user=request.user.id
+    #     ).values(
+    #         'ingredient__name',
+    #         'ingredient__measurement_unit'
+    #     ).annotate(amount=Sum('amount'))
+    #     shopping_cart = ['Список покупок:\n--------------']
+    #     for position, ingredient in enumerate(ingredients, start=1):
+    #         shopping_cart.append(
+    #             f'\n{position}. {ingredient["ingredient__name"]}:'
+    #             f' {ingredient["amount"]}'
+    #             f'({ingredient["ingredient__measurement_unit"]})'
+    #         )
+    #     response = HttpResponse(shopping_cart, content_type='text')
+    #     response['Content-Disposition'] = (
+    #         'attachment;filename=shopping_cart.pdf'
+    #     )
+    #     return response
 
 
 class CustomUserViewSet(UserViewSet):

@@ -30,4 +30,4 @@ class Follow(models.Model):
         )
 
     def __str__(self):
-        return f'{self.username} follow for {self.following}'
+        return f'{self.user} follow for {self.following}'

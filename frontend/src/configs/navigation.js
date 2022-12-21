@@ -1,6 +1,6 @@
 export default [
   {
-    title: 'Рецепты',
+    title: 'Недвижимость',
     href: '/recipes',
     auth: false
   },{
@@ -16,7 +16,7 @@ export default [
     href: '/favorites',
     auth: true
   }
-  // }, {
+  // , {
   //   title: 'Список покупок',
   //   href: '/cart',
   //   auth: true

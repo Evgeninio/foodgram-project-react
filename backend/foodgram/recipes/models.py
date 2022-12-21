@@ -45,21 +45,21 @@ class Ingredient(models.Model):
         'Название ингредиента',
         max_length=256
     )
-    measurement_unit = models.TextField(
-        'Единица измерения',
-        max_length=256
-    )
+    # measurement_unit = models.TextField(
+    #     'Единица измерения',
+    #     max_length=256
+    # )
 
-    class Meta:
-        verbose_name = 'Ингредиент'
-        verbose_name_plural = 'Ингредиенты'
-
-        constraints = (
-            models.UniqueConstraint(
-                fields=['name', 'measurement_unit'],
-                name='ingredient'
-            ),
-        )
+    # class Meta:
+    #     verbose_name = 'Ингредиент'
+    #     verbose_name_plural = 'Ингредиенты'
+    #
+    #     constraints = (
+    #         models.UniqueConstraint(
+    #             fields=['name', 'measurement_unit'],
+    #             name='ingredient'
+    #         ),
+    #     )
 
 
 class Recipe(models.Model):

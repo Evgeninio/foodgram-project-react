@@ -106,9 +106,9 @@ const RecipeEdit = ({ onItemDelete }) => {
       <MetaTags>
         <title>Редактирование рецепта</title>
         <meta name="description" content="Продуктовый помощник - Редактирование рецепта" />
-        <meta property="og:title" content="Редактирование рецепта" />
+        <meta property="og:title" content="Редактирование объявления" />
       </MetaTags>
-      <Title title='Редактирование рецепта' />
+      <Title title='Редактирование объявления' />
       <Form
         className={styles.form}
         onSubmit={e => {
@@ -153,7 +153,7 @@ const RecipeEdit = ({ onItemDelete }) => {
         }}
       >
         <Input
-          label='Название рецепта'
+          label='Стоимость'
           onChange={e => {
             const value = e.target.value
             setRecipeName(value)
@@ -172,7 +172,7 @@ const RecipeEdit = ({ onItemDelete }) => {
         <div className={styles.ingredients}>
           <div className={styles.ingredientsInputs}>
             <Input
-              label='Ингредиенты'
+              label='Комнаты'
               className={styles.ingredientsNameInput}
               inputClassName={styles.ingredientsInput}
               labelClassName={styles.ingredientsLabel}
@@ -242,12 +242,12 @@ const RecipeEdit = ({ onItemDelete }) => {
               })
             }}
           >
-            Добавить ингредиент
+            Добавить комнату
           </div>
         </div>
         <div className={styles.cookingTime}>
           <Input
-            label='Время приготовления'
+            label='Площадь'
             className={styles.ingredientsTimeInput}
             labelClassName={styles.cookingTimeLabel}
             inputClassName={styles.ingredientsTimeValue}
@@ -257,10 +257,10 @@ const RecipeEdit = ({ onItemDelete }) => {
             }}
             value={recipeTime}
           />
-          <div className={styles.cookingTimeUnit}>мин.</div>
+          <div className={styles.cookingTimeUnit}>м²</div>
         </div>
         <Textarea
-          label='Описание рецепта'
+          label='Описание недвижимости'
           onChange={e => {
             const value = e.target.value
             setRecipeText(value)
@@ -282,7 +282,7 @@ const RecipeEdit = ({ onItemDelete }) => {
             disabled={checkIfDisabled()}
             className={styles.button}
           >
-            Редактировать рецепт
+            Редактировать объявление
           </Button>
           <div
             className={styles.deleteRecipe}

@@ -1,6 +1,8 @@
 from django.contrib import admin
 
-from .models import Favorite, Ingredient, Recipe, ShoppingCart, Tag
+from .models import Favorite, Recipe, Ingredient, ShoppingCart, Tag
+
+# Ingredient,
 
 
 class RecipeIngredientAdmin(admin.TabularInline):
@@ -22,8 +24,9 @@ class RecipeAdmin(admin.ModelAdmin):
 
 class IngredientAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'name', 'measurement_unit'
+        'id', 'name'
     )
+    # 'measurement_unit'
     search_fields = ('name', )
     list_filter = ('name', )
     empy_value_display = '-пусто-'

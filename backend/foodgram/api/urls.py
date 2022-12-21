@@ -3,7 +3,7 @@ from rest_framework import routers
 
 from .views import (CustomUserViewSet, FollowViewSet, IngredientViewSet,
                     RecipeViewSet, TagViewSet, UserViewSet)
-
+# IngredientViewSet,
 router = routers.DefaultRouter()
 router.register('tags', TagViewSet)
 router.register('ingredients', IngredientViewSet)
